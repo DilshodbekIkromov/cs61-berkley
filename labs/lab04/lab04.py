@@ -10,7 +10,7 @@ def my_map(fn, seq):
     2023
     [None, None, None]
     """
-    return ______
+    return list(map(fn, seq))
 
 def my_filter(pred, seq):
     """Keeps elements in seq only if they satisfy pred.
@@ -28,8 +28,9 @@ def my_filter(pred, seq):
     >>> my_filter(lambda x: max(5, x) == 5, [1, 2, 3, 4, 5, 6, 7])
     [1, 2, 3, 4, 5]
     """
-    return ______
+    return list(filter(pred, seq))
 
+from functools import reduce
 def my_reduce(combiner, seq):
     """Combines elements in seq using combiner.
     seq will have at least one element.
@@ -43,7 +44,8 @@ def my_reduce(combiner, seq):
     11
     """
     "*** YOUR CODE HERE ***"
-
+    return reduce(combiner, seq)
+# i actually did not understand it 
 def my_map_syntax_check():
     """Check that your two_of_three code consists of nothing but a return statement.
 
@@ -81,6 +83,8 @@ def distance(city_a, city_b):
     5.0
     """
     "*** YOUR CODE HERE ***"
+    return sqrt((get_lat(city_a) - get_lat(city_b))**2 + (get_lon(city_a) - get_lon(city_b))**2) 
+
 
 def closer_city(lat, lon, city_a, city_b):
     """
@@ -98,6 +102,14 @@ def closer_city(lat, lon, city_a, city_b):
     'Bucharest'
     """
     "*** YOUR CODE HERE ***"
+    dista = sqrt((get_lat(city_a) - lat)**2 + (get_lon(city_a) - lon)**2) 
+    distb = sqrt((get_lat(city_b) - lat)**2 + (get_lon(city_b) - lon)**2) 
+    if dista < distb:
+        return get_name(city_a)
+    else:
+        return get_name(city_b)
+
+
 
 def check_city_abstraction():
     """
@@ -183,6 +195,7 @@ def sum_tree(t):
     15
     """
     "*** YOUR CODE HERE ***"
+    return label(t) + sum([sum_tree(b) for b in branches(t)])
 
 def balanced(t):
     """Checks if each branch has same sum of all elements and
@@ -199,6 +212,9 @@ def balanced(t):
     False
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return True
+    return all([sum_tree(b) == sum_tree(branches(t)[0]) for b in branches(t)]) and all([balanced(b) for b in branches(t)])
 
 
 def num_trees(n):
@@ -222,6 +238,9 @@ def num_trees(n):
 
     """
     "*** YOUR CODE HERE ***"
+    if n == 1:
+        return 1
+    return sum([num_trees(k) * num_trees(n - k) for k in range(1, n)])
 
 
 def only_paths(t, n):
@@ -250,11 +269,11 @@ def only_paths(t, n):
     >>> print(only_paths(t, 3))
     None
     """
-    if ____:
+    if is_leaf(t) and label(t) == n:
         return t
-    new_branches = [____ for b in branches(t)]
-    if ____(new_branches):
-        return tree(label(t), [b for b in new_branches if ____])
+    new_branches = [only_paths(b, n - label(t)) for b in branches(t)]
+    if any(new_branches):
+        return tree(label(t), [b for b in new_branches if b])
 
 
 
